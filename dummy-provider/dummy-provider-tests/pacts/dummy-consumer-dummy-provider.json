@@ -1,0 +1,100 @@
+{
+    "provider": {
+        "name": "dummy-provider"
+    },
+    "consumer": {
+        "name": "dummy-consumer"
+    },
+    "interactions": [
+        {
+            "description": "Retrieve users",
+            "request": {
+                "method": "GET",
+                "path": "/provider/api/users"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "body": [
+                    {
+                        "firstName": "Max",
+                        "lastName": "string"
+                    },
+                    {
+                        "firstName": "TestFirstName",
+                        "lastName": "string"
+                    }
+                ],
+                "matchingRules": {
+                    "body": {
+                        "$[0].lastName": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$[1].lastName": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "header": {
+                        "Content-Type": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "application/json;\\s?charset=(utf|UTF)-8"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                },
+                "generators": {
+                    "body": {
+                        "$[0].lastName": {
+                            "type": "RandomString",
+                            "size": 20
+                        },
+                        "$[1].lastName": {
+                            "type": "RandomString",
+                            "size": 20
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "description": "Say hello",
+            "request": {
+                "method": "POST",
+                "path": "/provider/api/hello",
+                "body": {
+                    "name": "testUser"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": {
+                    "hello": "testUser"
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "pactSpecification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "3.5.24"
+        }
+    }
+}
